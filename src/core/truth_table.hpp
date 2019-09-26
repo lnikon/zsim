@@ -67,4 +67,14 @@ using TruthTableUPtr    = std::unique_ptr<TruthTable>;
 using TruthTableSPtr    = std::shared_ptr<TruthTable>;
 using TruthTableWPtr    = std::weak_ptr<TruthTable>;
 
+auto make_unique()
+{
+    return std::make_unique<TruthTable>();
+}
+
+auto make_shared()
+{
+    return std::make_shared<TruthTable>();
+}
+
 } // namespace truth_table_ns

@@ -2,6 +2,8 @@
 
 #include "logic_value_defs.hpp"
 
+#include <memory>
+
 namespace table_ns
 {
 
@@ -66,5 +68,17 @@ struct Table
     dim_size_type columns_{};
 
 };
+
+template <class ValueType>
+auto make_unique()
+{
+    return std::make_unique<Table<ValueType>>();
+}
+
+template <class ValueType>
+auto make_shared()
+{
+    return std::make_shared<Table<ValueType>>();
+}
 
 } // namespace table_ns
