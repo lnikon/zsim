@@ -9,14 +9,15 @@ struct IdGenerator final
     using id_type = uint64_t;
     static id_type generate()
     {
-        if(!singleton_)
-        {
-            singleton_ = std::make_unique<IdGenerator>();
-        }
+//        if(!singleton_)
+//        {
+//            singleton_ = std::make_unique<IdGenerator>();
+//        }
 
         return id_++;
     }
 
+    IdGenerator() = default;
     ~IdGenerator() = default;
 
     IdGenerator(const IdGenerator&) = delete;
@@ -26,11 +27,11 @@ struct IdGenerator final
     IdGenerator& operator=(IdGenerator&&) = delete;
 
 private:
-    static std::unique_ptr<IdGenerator>    singleton_;
+//    static std::unique_ptr<IdGenerator>    singleton_;
     static uint64_t                        id_;
 };
 
-std::unique_ptr<IdGenerator>    IdGenerator::singleton_ = nullptr;
+//std::unique_ptr<IdGenerator>    IdGenerator::singleton_ = nullptr;
 uint64_t                        IdGenerator::id_ = 0;
 
 using IdGeneratorUPtr = std::unique_ptr<IdGenerator>;

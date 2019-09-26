@@ -72,7 +72,7 @@ template <class VertexIndexType,
           class... Args>
 auto make_unique(Args&&... args)
 {
-    return std::make_unique<Graph<VertexIndexType, VertexValueType, EdgeValueType>>(std::forward<Args...>(args...));
+    return std::make_unique<Graph<VertexIndexType, VertexValueType, EdgeValueType>>(std::forward<Args>(args)...);
 }
 
 template <class VertexIndexType,
@@ -81,7 +81,7 @@ template <class VertexIndexType,
           class... Args>
 auto make_shared(Args&&... args)
 {
-    return std::make_shared<Graph<VertexIndexType, VertexValueType, EdgeValueType>>(std::forward<Args...>(args...));
+    return std::make_shared<Graph<VertexIndexType, VertexValueType, EdgeValueType>>(std::forward<Args>(args)...);
 }
 
 } // namespace graph_ns

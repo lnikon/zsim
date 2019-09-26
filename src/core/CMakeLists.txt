@@ -11,3 +11,4 @@ add_library(core STATIC
 		${CORE_HPP})
 
 target_include_directories(core PUBLIC ${CORE_INC_DIR} ${LIBBLIFPARSER_INC_DIR})
+target_link_libraries(core PUBLIC id_generator)
