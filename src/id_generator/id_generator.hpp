@@ -37,14 +37,14 @@ using IdGeneratorUPtr = std::unique_ptr<IdGenerator>;
 using IdGeneratorSPtr = std::shared_ptr<IdGenerator>;
 using IdGeneratorWPtr = std::weak_ptr<IdGenerator>;
 
-auto make_unique()
-{
-    return std::make_unique<IdGenerator>();
-}
+//auto make_unique()
+//{
+//    return std::make_unique<IdGenerator>();
+//}
 
-auto make_shared()
-{
-    return std::make_shared<IdGenerator>();
-}
+//auto make_shared()
+//{
+//    return std::make_shared<IdGenerator>();
+//}
 
 } // namespace id_generator_ns

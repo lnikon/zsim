@@ -13,6 +13,8 @@ template <class VertexIndexType,
           class EdgeValueType>
 struct Graph final
 {
+    enum class Direction    { Input = 0, Output , BiDir };
+
     struct Neighbour;
     using NeighbourUPtr     = std::unique_ptr<Neighbour>;
     using NeighbourSPtr     = std::shared_ptr<Neighbour>;
@@ -24,8 +26,9 @@ struct Graph final
 
     struct Neighbour
     {
-        EdgeValueType   value_;
         IdVertexPair    adjacent_;
+        EdgeValueType   value_;
+        Direction       direction_;
     };
 
     void addVertex(IdVertexPairCRef idVertexPair)
@@ -36,13 +39,49 @@ struct Graph final
         }
     }
 
-    void addEdge(IdVertexPairCRef from, IdVertexPairCRef to)
+    void addEdge(IdVertexPairCRef from, IdVertexPairCRef to, EdgeValueType edgeValue, Direction = Direction::BiDir)
     {
-
+        graph_[from.first].second.emplace_back({to, edgeValue, Direction::Output});
+        graph_[to.first].second.emplace_back({from, edgeValue, Direction::Input});
     }
 
 private:
-    std::unordered_map<VertexIndexType, std::pair<VertexValueType, NeighbourSPtrVec>> graph_;
+    std::unordered_map<VertexIndexType,
+                       std::pair<VertexValueType,
+                                 NeighbourSPtrVec>> graph_;
 };
+
+template <class VertexIndexType,
+          class VertexValueType,
+          class EdgeValueType>
+using GraphUPtr = std::unique_ptr<Graph<VertexIndexType, VertexValueType, EdgeValueType>>;\
+
+template <class VertexIndexType,
+          class VertexValueType,
+          class EdgeValueType>
+using GraphSPtr = std::shared_ptr<Graph<VertexIndexType, VertexValueType, EdgeValueType>>;
+
+template <class VertexIndexType,
+          class VertexValueType,
+          class EdgeValueType>
+using GraphWPtr = std::weak_ptr<Graph<VertexIndexType, VertexValueType, EdgeValueType>>;
+
+template <class VertexIndexType,
+          class VertexValueType,
+          class EdgeValueType,
+          class... Args>
+auto make_unique(Args&&... args)
+{
+    return std::make_unique<Graph<VertexIndexType, VertexValueType, EdgeValueType>>(std::forward<Args...>(args...));
+}
+
+template <class VertexIndexType,
+          class VertexValueType,
+          class EdgeValueType,
+          class... Args>
+auto make_shared(Args&&... args)
+{
+    return std::make_shared<Graph<VertexIndexType, VertexValueType, EdgeValueType>>(std::forward<Args...>(args...));
+}
 
 } // namespace graph_ns
