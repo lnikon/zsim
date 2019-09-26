@@ -11,19 +11,22 @@ namespace netlist_ns
 
 using namespace logic_function_ns;
 
-template <class LogicFunctionType>
-struct Node
+enum class InputNodeType {};
+enum class OutputNodeType {};
+enum class GateNodeType {};
+
+struct NodeBase
 {
     using id_type = id_generator_ns::IdGenerator::id_type;
 
-    Node() = default;
-    virtual ~Node() = default;
+    NodeBase() = default;
+    virtual ~NodeBase() = default;
 
-    Node(const Node&) = default;
-    Node& operator=(const Node&) = default;
+    NodeBase(const NodeBase&) = default;
+    NodeBase& operator=(const NodeBase&) = default;
 
-    Node(Node&&) = default;
-    Node& operator=(Node&&) = default;
+    NodeBase(NodeBase&&) = default;
+    NodeBase& operator=(NodeBase&&) = default;
 
     void setId(id_type id)
     {
@@ -39,17 +42,46 @@ protected:
     id_type id_{};
 };
 
+template <class LogicFunctionType, class NodeType>
+struct Node {};
+
 template <class LogicFunctionType>
-struct Gate : Node<LogicFunctionType>
+struct Node<LogicFunctionType, InputNodeType> : NodeBase
 {
-    Gate() = default;
-    ~Gate() = default;
+    Node() = default;
+    ~Node() = default;
 
-    Gate(const Gate&) = default;
-    Gate& operator=(const Gate&) = default;
+    Node(const Node&) = default;
+    Node& operator=(const Node&) = default;
 
-    Gate(Gate&&) = default;
-    Gate& operator=(Gate&&) = default;
+    Node(Node&&) = default;
+    Node& operator=(Node&&) = default;
+};
+
+template <class LogicFunctionType>
+struct Node<LogicFunctionType, OutputNodeType> : NodeBase
+{
+    Node() = default;
+    ~Node() = default;
+
+    Node(const Node&) = default;
+    Node& operator=(const Node&) = default;
+
+    Node(Node&&) = default;
+    Node& operator=(Node&&) = default;
+};
+
+template <class LogicFunctionType>
+struct Node<LogicFunctionType, GateNodeType> : NodeBase
+{
+    Node() = default;
+    ~Node() = default;
+
+    Node(const Node&) = default;
+    Node& operator=(const Node&) = default;
+
+    Node(Node&&) = default;
+    Node& operator=(Node&&) = default;
 
     void setLogicFunction(LogicFunction<LogicFunctionType> logicFn)
     {

@@ -54,6 +54,9 @@ int main(int argc, char *argv[])
                                            netlist_ns::Gate<logic_function_ns::UserDefinedLogicFunctionType>,
                                            netlist_ns::Net>();
 
+    netlist_ns::Node<logic_function_ns::UserDefinedLogicFunctionType>* pNode =
+            new netlist_ns::Gate<logic_function_ns::UserDefinedLogicFunctionType>;
+
 //    auto spIdGen = id_generator_ns::make_shared();
 
 
