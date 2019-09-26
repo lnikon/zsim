@@ -69,16 +69,16 @@ struct Table
 
 };
 
-template <class ValueType>
-auto make_unique()
+template <class ValueType, class... Args>
+auto make_unique(Args&&... args)
 {
-    return std::make_unique<Table<ValueType>>();
+    return std::make_unique<Table<ValueType>>(std::forward<Args>(args)...);
 }
 
-template <class ValueType>
-auto make_shared()
+template <class ValueType, class... Args>
+auto make_shared(Args&&... args)
 {
-    return std::make_shared<Table<ValueType>>();
+    return std::make_shared<Table<ValueType>>(std::forward<Args>(args)...);
 }
 
 } // namespace table_ns

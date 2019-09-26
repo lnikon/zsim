@@ -9,9 +9,23 @@ using namespace truth_table_ns;
 
 enum class And2LogicFunctionType {};
 enum class UserDefinedLogicFunctionType {};
+enum class InputLogicFunctionType {};
+enum class OutputLogicFunctionType {};
 
 template <class LogicFunctionType>
 struct LogicFunction;
+
+template <>
+struct LogicFunction<InputLogicFunctionType>
+{
+
+};
+
+template <>
+struct LogicFunction<OutputLogicFunctionType>
+{
+
+};
 
 template <>
 struct LogicFunction<UserDefinedLogicFunctionType>

@@ -45,8 +45,8 @@ protected:
 template <class LogicFunctionType, class NodeType>
 struct Node {};
 
-template <class LogicFunctionType>
-struct Node<LogicFunctionType, InputNodeType> : NodeBase
+template <>
+struct Node<InputLogicFunctionType, InputNodeType> : NodeBase
 {
     Node() = default;
     ~Node() = default;
@@ -58,8 +58,8 @@ struct Node<LogicFunctionType, InputNodeType> : NodeBase
     Node& operator=(Node&&) = default;
 };
 
-template <class LogicFunctionType>
-struct Node<LogicFunctionType, OutputNodeType> : NodeBase
+template <>
+struct Node<OutputLogicFunctionType, OutputNodeType> : NodeBase
 {
     Node() = default;
     ~Node() = default;
