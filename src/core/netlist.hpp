@@ -1,128 +1,52 @@
 #pragma once
 
+#include "base_defs.hpp"
+#include "net.hpp"
+#include "gate.hpp"
 #include "logic_function.hpp"
-#include "id_generator.hpp"
 
 #include <string>
 #include <functional>
+#include <unordered_map>
+#include <unordered_set>
 
 namespace netlist_ns
 {
 
 using namespace logic_function_ns;
 
-enum class InputNodeType {};
-enum class OutputNodeType {};
-enum class GateNodeType {};
-
-struct NodeBase
+struct Netlist
 {
-    using id_type = id_generator_ns::IdGenerator::id_type;
+    gate_ns::GateSPtr   findGate(NameBase::name_type_cref name) const;
 
-    NodeBase() = default;
-    virtual ~NodeBase() = default;
+    net_ns::NetSPtr     findNet(NameBase::name_type_cref name) const;
 
-    NodeBase(const NodeBase&) = default;
-    NodeBase& operator=(const NodeBase&) = default;
+    gate_ns::GateSPtr   addGate(NameBase::name_type_cref name,  DelayBase::delay_type delay = 0);
+    gate_ns::GateSPtr   addGate(gate_ns::GateSPtr gate);
 
-    NodeBase(NodeBase&&) = default;
-    NodeBase& operator=(NodeBase&&) = default;
+    net_ns::NetSPtr     addNet (NameBase::name_type_cref name,  net_ns::NetType type, DelayBase::delay_type delay = 0);
 
-    void setId(id_type id)
-    {
-        id_ = id;
-    }
+    void                attachNet(NameBase::name_type_cref gateName, net_ns::Net::name_type_cref netName, net_ns::NetType type, DelayBase::delay_type delay = 0);
 
-    auto getId() const
-    {
-        return id_;
-    }
-
-protected:
-    id_type id_{};
-};
-
-template <class LogicFunctionType, class NodeType>
-struct Node {};
-
-template <>
-struct Node<InputLogicFunctionType, InputNodeType> : NodeBase
-{
-    Node() = default;
-    ~Node() = default;
-
-    Node(const Node&) = default;
-    Node& operator=(const Node&) = default;
-
-    Node(Node&&) = default;
-    Node& operator=(Node&&) = default;
-};
-
-template <>
-struct Node<OutputLogicFunctionType, OutputNodeType> : NodeBase
-{
-    Node() = default;
-    ~Node() = default;
-
-    Node(const Node&) = default;
-    Node& operator=(const Node&) = default;
-
-    Node(Node&&) = default;
-    Node& operator=(Node&&) = default;
-};
-
-template <class LogicFunctionType>
-struct Node<LogicFunctionType, GateNodeType> : NodeBase
-{
-    Node() = default;
-    ~Node() = default;
-
-    Node(const Node&) = default;
-    Node& operator=(const Node&) = default;
-
-    Node(Node&&) = default;
-    Node& operator=(Node&&) = default;
-
-    void setLogicFunction(LogicFunction<LogicFunctionType> logicFn)
-    {
-        fn_ = logicFn;
-    }
-
-    template <class T>
-    LogicValue run(T&& input)
-    {
-        return fn_(input);
-    }
+    LogicFunction<UserDefinedLogicFunctionType>     addCover(NameBase::name_type_cref coverOutputName, TruthTableCRef truthTable);
 
 private:
-    std::function<LogicValue(LogicValueVecCRef)> fn_{nullptr};
+    /*
+     * Values corresponds to .gate in model file
+     */
+    std::unordered_map<NameBase::name_type, gate_ns::GateSPtr> gates_;
+
+    /*
+     * Stores all nets existing in file
+     */
+    std::unordered_map<NameBase::name_type, net_ns::NetSPtr>   nets_;
+
+    /*
+     * Corresponding between so-cover and LogicFunction they perform.
+     * Cover is determined by it's output net,
+     * so that output net will be a key
+     */
+    std::unordered_map<NameBase::name_type, LogicFunction<UserDefinedLogicFunctionType>> so_covers_;
 };
-
-
-struct Net
-{
-    Net() = default;
-    ~Net() = default;
-
-    Net(const Net&) = delete;
-    Net& operator=(const Net&) = delete;
-
-    Net(Net&&) = delete;
-    Net& operator=(Net&&) = delete;
-};
-
-
-struct Netlist final
-{
-    Netlist() = default;
-    ~Netlist() = default;
-
-    Netlist(const Netlist&) = delete;
-    Netlist& operator=(const Netlist&) = delete;
-
-    Netlist(Netlist&&) = delete;
-    Netlist& operator=(Netlist&&) = delete;
-};
-
 
 } // namespace netlist_ns

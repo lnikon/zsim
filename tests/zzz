@@ -1,0 +1,4 @@
+.default_input_arrival 0.00 0.00
+.default_output_required 5.48 5.72
+.default_input_drive 1.98 1.82
+.default_output_load 0.10

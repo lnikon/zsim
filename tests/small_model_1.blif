@@ -1,0 +1,14 @@
+.model small_model_1
+
+.inputs i_0_ i_1_ i_2_ 
+
+.outputs o_1_ o_2_
+
+.names i_0_ i_1_ i_2_ o_1_
+1-- 1
+-1- 1
+--1 1
+.names o_1_ i_1_ i_2_ o_2_
+1-1 1
+-1- 1
+1-1 1

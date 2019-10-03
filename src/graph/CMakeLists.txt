@@ -9,3 +9,4 @@ file(GLOB_RECURSE GRAPH_HPP "${GRAPH_DIR}/*.hpp")
 add_library(graph STATIC ${GRAPH_CPP} ${GRAPH_HPP})
 
 target_include_directories(graph PUBLIC ${GRAPH_DIR})
+target_link_libraries(graph PUBLIC core)

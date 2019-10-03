@@ -32,16 +32,23 @@ struct LogicFunction<UserDefinedLogicFunctionType>
 {
     LogicFunction() = default;
 
-    LogicFunction(const LogicFunction&) = delete;
-    LogicFunction& operator=(const LogicFunction&) = delete;
+    LogicFunction(const LogicFunction&) = default;
+    LogicFunction& operator=(const LogicFunction&) = default;
 
-    LogicFunction(LogicFunction&&) = delete;
-    LogicFunction& operator=(LogicFunction&&) = delete;
+    LogicFunction(LogicFunction&&) = default;
+    LogicFunction& operator=(LogicFunction&&) = default;
 
-    template <class T>
-    LogicFunction(T&& truthTable)
-        : truthTable_{std::forward<T>(truthTable)}
-    { }
+    LogicFunction(TruthTableCRef truthTable)
+        : truthTable_{truthTable}
+    {
+
+    }
+
+    LogicFunction(TruthTable&& truthTable)
+        : truthTable_{std::move(truthTable)}
+    {
+
+    }
 
     LogicValue operator()(LogicValueVecCRef inputs)
     {
@@ -67,10 +74,10 @@ struct LogicFunction<And2LogicFunctionType> : LogicFunction<UserDefinedLogicFunc
     LogicFunction()
         :  LogicFunction<UserDefinedLogicFunctionType>()
     {
-        truthTable_.addCover(LogicValueVec{LogicValue::LOW,  LogicValue::LOW},  LogicValue::LOW);
-        truthTable_.addCover(LogicValueVec{LogicValue::LOW,  LogicValue::HIGH}, LogicValue::LOW);
-        truthTable_.addCover(LogicValueVec{LogicValue::HIGH, LogicValue::LOW},  LogicValue::LOW);
-        truthTable_.addCover(LogicValueVec{LogicValue::HIGH, LogicValue::HIGH}, LogicValue::HIGH);
+        truthTable_.addCover(LogicValueVec{LogicValue::FALSE,  LogicValue::FALSE},  LogicValue::FALSE);
+        truthTable_.addCover(LogicValueVec{LogicValue::FALSE,  LogicValue::TRUE},   LogicValue::FALSE);
+        truthTable_.addCover(LogicValueVec{LogicValue::TRUE,   LogicValue::FALSE},  LogicValue::FALSE);
+        truthTable_.addCover(LogicValueVec{LogicValue::TRUE,   LogicValue::TRUE},   LogicValue::TRUE);
     }
 };
 

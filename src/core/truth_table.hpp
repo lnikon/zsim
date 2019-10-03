@@ -34,21 +34,58 @@ struct TruthTable final
     std::pair<bool, LogicValue> match(LogicValueVecCRef input) const
     {
         /* DO SIZE CHECK */
-        const auto inputCoverSize = inputCoverTable_.size();
+        const auto coverSize = inputCoverTable_.size();
 
         auto isMatch = false;
         LogicValue value = LogicValue::DONT_CARE;
 
         LogicTable::dim_size_type rowIdx = 0;
-        for(; rowIdx < inputCoverSize.first; ++rowIdx)
+        for(; rowIdx < coverSize.first; ++rowIdx)
         {
             const auto& row = inputCoverTable_.row(rowIdx);
-            if(isMatch = std::equal(std::begin(row),
-                                 std::end(row),
-                                 std::begin(input)); isMatch)
+
+            bool dontMatch = false;
+
+            auto valueIdx = 0u;
+            auto allDontCare = 0u;
+            for(valueIdx = 0u; valueIdx < row.size(); ++valueIdx)
             {
-                    value = outputCover_[rowIdx];
+                if(row[valueIdx] == LogicValue::DONT_CARE)
+                {
+                    allDontCare++;
+                    continue;
+                }
+
+//                if(input[valueIdx] == LogicValue::DONT_CARE)
+//                {
+//                    continue;
+//                }
+
+                if(input[valueIdx] != row[valueIdx])
+                {
+                    dontMatch = true;
                     break;
+                }
+            }
+
+            if(dontMatch)
+            {
+                continue;
+            }
+
+            /*
+             * Skip all don't care rows
+             */
+            if(allDontCare == valueIdx)
+            {
+                continue;
+            }
+
+            if(valueIdx == row.size())
+            {
+                isMatch = true;
+                value = outputCover_[rowIdx];
+                break;
             }
         }
 
@@ -67,14 +104,16 @@ using TruthTableUPtr    = std::unique_ptr<TruthTable>;
 using TruthTableSPtr    = std::shared_ptr<TruthTable>;
 using TruthTableWPtr    = std::weak_ptr<TruthTable>;
 
-auto make_unique()
+template <class... Args>
+auto make_unique(Args&&... args)
 {
-    return std::make_unique<TruthTable>();
+    return std::make_unique<TruthTable>(std::forward<Args>(args)...);
 }
 
-auto make_shared()
+template <class... Args>
+auto make_shared(Args&&... args)
 {
-    return std::make_shared<TruthTable>();
+    return std::make_shared<TruthTable>(std::forward<Args>(args)...);
 }
 
 } // namespace truth_table_ns

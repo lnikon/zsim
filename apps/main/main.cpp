@@ -2,7 +2,10 @@
 
 #include "logic_function.hpp"
 #include "latch_defs.hpp"
+#include "base_defs.hpp"
 #include "netlist.hpp"
+#include "gate.hpp"
+#include "net.hpp"
 #include "graph.hpp"
 #include "id_generator.hpp"
 #include "blifparse.hpp"
@@ -40,25 +43,14 @@ class NoOpCallback : public blifparse::Callback {
 
     private:
         bool had_error_ = false;
-        graph_ns::Graph<id_generator_ns::IdGenerator::id_type,
-            netlist_ns::Gate<logic_function_ns::UserDefinedLogicFunctionType>, netlist_ns::Net> graph_{};
 };
 
 int main(int argc, char *argv[])
 {
-//    graph_ns::Graph<id_generator_ns::IdGenerator::id_type,
-//                    netlist_ns::Gate<logic_function_ns::UserDefinedLogicFunctionType>,
-//                    netlist_ns::Net> circuit;
+    using namespace logic_function_ns;
+    using namespace logic_value_type_ns;
 
-    auto spCircuit = graph_ns::make_shared<id_generator_ns::IdGenerator::id_type,
-                                           netlist_ns::Gate<logic_function_ns::UserDefinedLogicFunctionType>,
-                                           netlist_ns::Net>();
-
-    netlist_ns::Node<logic_function_ns::UserDefinedLogicFunctionType>* pNode =
-            new netlist_ns::Gate<logic_function_ns::UserDefinedLogicFunctionType>;
-
-//    auto spIdGen = id_generator_ns::make_shared();
-
+    netlist_ns::Netlist netlist;
 
     return 0;
 }

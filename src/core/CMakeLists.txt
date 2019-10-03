@@ -12,3 +12,5 @@ add_library(core STATIC
 
 target_include_directories(core PUBLIC ${CORE_INC_DIR} ${LIBBLIFPARSER_INC_DIR})
 target_link_libraries(core PUBLIC id_generator)
+target_link_libraries(core PUBLIC graph)
+target_link_libraries(core PUBLIC zsim_algorithm)
