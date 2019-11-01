@@ -50,12 +50,6 @@ class NetlistTestCallback : public Callback {
                  * then it's should be marked as internal
                  */
                 auto netSPtr = netlist_.addNet(net, net_ns::NetType::INTERNAL_NET);
-
-                /*
-                 * Because current net can be 'local' input for current gate,
-                 * mark it's as input
-                 */
-//                netSPtr->setType(net_ns::NetType::INPUT_NET);
             }
 
             TruthTable truthTable;
