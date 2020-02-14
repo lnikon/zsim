@@ -1,6 +1,6 @@
 === WSL Setup ===
 
 > sudo apt-get update
-> sudo apt-get install ssh vim git wget cmake
+> sudo apt-get install ssh vim git wget cmake build-essential flex bison
 
 =================
