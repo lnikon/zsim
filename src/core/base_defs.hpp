@@ -5,6 +5,8 @@
 #include "logic_value_defs.hpp"
 #include "netlist_hash.hpp"
 
+#include <functional>
+
 using namespace logic_function_ns;
 using namespace logic_value_type_ns;
 
