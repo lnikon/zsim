@@ -84,6 +84,10 @@ logic_value_type_ns::LogicValue gate_ns::GateNode::run(logic_value_type_ns::Logi
         netWrapper.net_->receive(value_);
     }
 
+    /** IMPLEMENT:
+     * Add output change into timing wheel
+     */
+
     /*
      * Return value of simulation result
      */
