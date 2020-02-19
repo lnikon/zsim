@@ -18,9 +18,11 @@
 `mkdir build && cd build`
 
 For Debug Build Use
+
 `cmake -DCMAKE_BUILD_TYPE=Debug ..`
 
 Otherwise
+
 `cmake ..`
 
 `make`
