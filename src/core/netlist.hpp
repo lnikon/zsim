@@ -28,7 +28,7 @@ struct Netlist
 
     void                attachNet(NameBase::name_type_cref gateName, net_ns::Net::name_type_cref netName, net_ns::NetType type, DelayBase::delay_type delay = 0);
 
-    LogicFunction<UserDefinedLogicFunctionType>     addCover(NameBase::name_type_cref coverOutputName, TruthTableCRef truthTable);
+    LogicFunction<UserDefinedLogicFunctionType> addCover(NameBase::name_type_cref coverOutputName, TruthTableCRef truthTable);
 
 private:
     /*
