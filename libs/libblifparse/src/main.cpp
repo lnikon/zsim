@@ -138,9 +138,9 @@ int main(int argc, char **argv) {
     auto input2 = callback.netlist_.findNet("i_1_");
     auto input3 = callback.netlist_.findNet("i_2_");
 
-    input1->receive(logic_value_type_ns::LogicValue::TRUE);
-    input2->receive(logic_value_type_ns::LogicValue::DONT_CARE);
-    input3->receive(logic_value_type_ns::LogicValue::FALSE);
+    input1->receive(logic_value_type_ns::logic_value_t::TRUE);
+    input2->receive(logic_value_type_ns::logic_value_t::DONT_CARE);
+    input3->receive(logic_value_type_ns::logic_value_t::FALSE);
 
     auto value1 = gate1->run();
     auto value2 = gate2->run();

@@ -46,8 +46,8 @@ struct GateNode final : NodeBase, SimulateBase
     GateNode(GateNode&&) = default;
     GateNode& operator=(GateNode&& other);
 
-    LogicValue run() override;
-    LogicValue run(LogicValueVecCRef input) override;
+    logic_value_t run() override;
+    logic_value_t run(LogicValueVecCRef input) override;
 
     void attachNet(net_ns::NetSPtr net, net_ns::NetTypeBitmap);
 

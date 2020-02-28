@@ -34,7 +34,7 @@ gate_ns::GateNode &gate_ns::GateNode::operator=(const gate_ns::GateNode &other)
     return *this;
 }
 
-logic_value_type_ns::LogicValue gate_ns::GateNode::run()
+logic_value_type_ns::logic_value_t gate_ns::GateNode::run()
 {
     using namespace zsim_algorithm_ns;
 
@@ -60,7 +60,7 @@ logic_value_type_ns::LogicValue gate_ns::GateNode::run()
     return run(logicValueVec);
 }
 
-logic_value_type_ns::LogicValue gate_ns::GateNode::run(logic_value_type_ns::LogicValueVecCRef input)
+logic_value_type_ns::logic_value_t gate_ns::GateNode::run(logic_value_type_ns::LogicValueVecCRef input)
 {
     /*
      * Simulate current gate and receive it's response

@@ -13,7 +13,7 @@ using namespace table_ns;
 
 struct TruthTable final
 {
-    using LogicTable    = Table<LogicValue>;
+    using LogicTable    = Table<logic_value_t>;
 
     TruthTable() = default;
     ~TruthTable() = default;
@@ -25,19 +25,19 @@ struct TruthTable final
     TruthTable& operator=(TruthTable&&) = default;
 
     template <class T>
-    void addCover(T&& inputCover, LogicValue value)
+    void addCover(T&& inputCover, logic_value_t value)
     {
         inputCoverTable_.addRow(std::forward<T>(inputCover));
         outputCover_.emplace_back(value);
     }
 
-    std::pair<bool, LogicValue> match(LogicValueVecCRef input) const
+    std::pair<bool, logic_value_t> match(LogicValueVecCRef input) const
     {
         /* DO SIZE CHECK */
         const auto coverSize = inputCoverTable_.size();
 
         auto isMatch = false;
-        LogicValue value = LogicValue::DONT_CARE;
+        logic_value_t value = logic_value_t::DONT_CARE;
 
         LogicTable::dim_size_type rowIdx = 0;
         for(; rowIdx < coverSize.first; ++rowIdx)
@@ -50,7 +50,7 @@ struct TruthTable final
             auto allDontCare = 0u;
             for(valueIdx = 0u; valueIdx < row.size(); ++valueIdx)
             {
-                if(row[valueIdx] == LogicValue::DONT_CARE)
+                if(row[valueIdx] == logic_value_t::DONT_CARE)
                 {
                     allDontCare++;
                     continue;

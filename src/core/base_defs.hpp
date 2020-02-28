@@ -119,7 +119,7 @@ struct HasLogicFunctionBase
     }
 
 protected:
-    std::function<LogicValue(LogicValueVecCRef)> fn_{nullptr};
+    std::function<logic_value_t(LogicValueVecCRef)> fn_{nullptr};
 };
 
 struct RunnableBase
@@ -127,8 +127,8 @@ struct RunnableBase
     RunnableBase() = default;
 
     virtual ~RunnableBase() {}
-    virtual LogicValue run() = 0;
-    virtual LogicValue run(LogicValueVecCRef input) = 0;
+    virtual logic_value_t run() = 0;
+    virtual logic_value_t run(LogicValueVecCRef input) = 0;
 };
 
 // One to one relationship
@@ -138,16 +138,16 @@ struct ReceiveBase
 
     virtual ~ReceiveBase() {}
 
-    virtual void receive(LogicValue value) { value_ = value; }
+    virtual void receive(logic_value_t value) { value_ = value; }
 
-    auto getValue() const ->LogicValue { return value_; }
-    void setValue(LogicValue value) { value_ = value; }
+    auto getValue() const ->logic_value_t { return value_; }
+    void setValue(logic_value_t value) { value_ = value; }
 
 protected:
     /*
      * Store received value for further use
      */
-    LogicValue value_{LogicValue::DONT_CARE};
+    logic_value_t value_{logic_value_t::DONT_CARE};
 };
 struct ReceiveBase;
 using ReceiveBaseSPtr = std::shared_ptr<ReceiveBase>;
@@ -158,7 +158,7 @@ struct SendBase
 {
     virtual ~SendBase() {}
 
-    virtual void send(LogicValue value)
+    virtual void send(logic_value_t value)
     {
         std::for_each(std::begin(to_), std::end(to_), [value](const auto& receiver)
         {

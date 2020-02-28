@@ -38,7 +38,7 @@ namespace blifparse {
 /*
  * Data structure Forward declarations
  */
-using LogicValue = logic_value_type_ns::LogicValue;
+using LogicValue = logic_value_type_ns::logic_value_t;
 enum class LatchType;
 
 class Callback {

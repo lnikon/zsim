@@ -50,9 +50,9 @@ struct LogicFunction<UserDefinedLogicFunctionType>
 
     }
 
-    LogicValue operator()(LogicValueVecCRef inputs)
+    logic_value_t operator()(LogicValueVecCRef inputs)
     {
-        LogicValue result = LogicValue::DONT_CARE;
+        logic_value_t result = logic_value_t::DONT_CARE;
         if(const auto [ok, value] = truthTable_.match(inputs); ok)
         {
             result = value;
@@ -74,10 +74,10 @@ struct LogicFunction<And2LogicFunctionType> : LogicFunction<UserDefinedLogicFunc
     LogicFunction()
         :  LogicFunction<UserDefinedLogicFunctionType>()
     {
-        truthTable_.addCover(LogicValueVec{LogicValue::FALSE,  LogicValue::FALSE},  LogicValue::FALSE);
-        truthTable_.addCover(LogicValueVec{LogicValue::FALSE,  LogicValue::TRUE},   LogicValue::FALSE);
-        truthTable_.addCover(LogicValueVec{LogicValue::TRUE,   LogicValue::FALSE},  LogicValue::FALSE);
-        truthTable_.addCover(LogicValueVec{LogicValue::TRUE,   LogicValue::TRUE},   LogicValue::TRUE);
+        truthTable_.addCover(LogicValueVec{logic_value_t::FALSE,  logic_value_t::FALSE},  logic_value_t::FALSE);
+        truthTable_.addCover(LogicValueVec{logic_value_t::FALSE,  logic_value_t::TRUE},   logic_value_t::FALSE);
+        truthTable_.addCover(LogicValueVec{logic_value_t::TRUE,   logic_value_t::FALSE},  logic_value_t::FALSE);
+        truthTable_.addCover(LogicValueVec{logic_value_t::TRUE,   logic_value_t::TRUE},   logic_value_t::TRUE);
     }
 };
 
