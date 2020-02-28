@@ -2,6 +2,8 @@
 #include "blifparse.hpp"
 #include "blif_pretty_print.hpp"
 #include "netlist.hpp"
+#include "simulation_defs.hpp"
+#include "timing_wheel.hpp"
 
 #include <cstdio>
 #include <cstdlib>
