@@ -1,11 +1,11 @@
 #pragma once
 
+#include <functional>
+
 #include "id_generator.hpp"
 #include "logic_function.hpp"
 #include "logic_value_defs.hpp"
 #include "netlist_hash.hpp"
-
-#include <functional>
 
 using namespace logic_function_ns;
 using namespace logic_value_type_ns;
@@ -59,7 +59,7 @@ protected:
 };
 
 struct DelayBase {
-  using delay_type = double;
+  using delay_type = std::size_t;
 
   static const delay_type default_value = 0;
 
