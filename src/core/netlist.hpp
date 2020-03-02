@@ -30,6 +30,9 @@ struct Netlist {
                  net_ns::Net::name_type_cref netName, net_ns::NetType type,
                  DelayBase::delay_type delay = 0);
 
+  net_ns::NetSPtrVec primaryInputs() const;
+  net_ns::NetSPtrVec primaryOutputs() const;
+
   LogicFunction<UserDefinedLogicFunctionType>
   addCover(NameBase::name_type_cref coverOutputName, TruthTableCRef truthTable);
 
