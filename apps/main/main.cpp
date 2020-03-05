@@ -116,7 +116,7 @@ public:
 
   bool had_error() { return had_error_ = true; }
 
-  netlist_ns::Netlist netlist_;
+  ns_netlist::Netlist netlist_;
 
 private:
   bool had_error_ = false;

@@ -3,7 +3,7 @@
 #include "gate_router.hpp"
 
 gate_ns::GateSPtr
-netlist_ns::Netlist::findGate(NameBase::name_type_cref name) const {
+ns_netlist::Netlist::findGate(NameBase::name_type_cref name) const {
   auto it = gates_.find(name);
 
   if (it != std::end(gates_)) {
@@ -14,7 +14,7 @@ netlist_ns::Netlist::findGate(NameBase::name_type_cref name) const {
 }
 
 net_ns::NetSPtr
-netlist_ns::Netlist::findNet(NameBase::name_type_cref name) const {
+ns_netlist::Netlist::findNet(NameBase::name_type_cref name) const {
   auto it = nets_.find(name);
 
   if (it != std::end(nets_)) {
@@ -24,7 +24,7 @@ netlist_ns::Netlist::findNet(NameBase::name_type_cref name) const {
   return nullptr;
 }
 
-gate_ns::GateSPtr netlist_ns::Netlist::addGate(NameBase::name_type_cref name,
+gate_ns::GateSPtr ns_netlist::Netlist::addGate(NameBase::name_type_cref name,
                                                DelayBase::delay_type delay) {
   // Try to find and return the node, if it's already created
   auto gate = findGate(name);
@@ -39,13 +39,13 @@ gate_ns::GateSPtr netlist_ns::Netlist::addGate(NameBase::name_type_cref name,
   return gates_[name];
 }
 
-gate_ns::GateSPtr netlist_ns::Netlist::addGate(gate_ns::GateSPtr gate) {
+gate_ns::GateSPtr ns_netlist::Netlist::addGate(gate_ns::GateSPtr gate) {
   gates_.emplace(gate->getName(), gate);
 
   return gates_[gate->getName()];
 }
 
-net_ns::NetSPtr netlist_ns::Netlist::addNet(NameBase::name_type_cref name,
+net_ns::NetSPtr ns_netlist::Netlist::addNet(NameBase::name_type_cref name,
                                             net_ns::NetType type,
                                             DelayBase::delay_type delay) {
   // Try to find and return the net, if it's already created
@@ -64,7 +64,7 @@ net_ns::NetSPtr netlist_ns::Netlist::addNet(NameBase::name_type_cref name,
 /*
  * TODO: Do I need this function?
  */
-void netlist_ns::Netlist::attachNet(NameBase::name_type_cref gateName,
+void ns_netlist::Netlist::attachNet(NameBase::name_type_cref gateName,
                                     NameBase::name_type_cref netName,
                                     net_ns::NetType type,
                                     DelayBase::delay_type netDelay) {
@@ -75,7 +75,7 @@ void netlist_ns::Netlist::attachNet(NameBase::name_type_cref gateName,
   net->addGate(gate);
 }
 
-net_ns::NetSPtrVec netlist_ns::Netlist::primaryInputs() const {
+net_ns::NetSPtrVec ns_netlist::Netlist::primaryInputs() const {
   auto inputNets = net_ns::NetSPtrVec{};
   zsim_algorithm_ns::filter(std::begin(nets_), std::end(nets_),
                             std::back_inserter(inputNets),
@@ -83,7 +83,7 @@ net_ns::NetSPtrVec netlist_ns::Netlist::primaryInputs() const {
   return inputNets;
 }
 
-net_ns::NetSPtrVec netlist_ns::Netlist::primaryOutputs() const {
+net_ns::NetSPtrVec ns_netlist::Netlist::primaryOutputs() const {
   auto outputNets = net_ns::NetSPtrVec{};
   zsim_algorithm_ns::filter(std::begin(nets_), std::end(nets_),
                             std::back_inserter(outputNets),
@@ -92,7 +92,7 @@ net_ns::NetSPtrVec netlist_ns::Netlist::primaryOutputs() const {
 }
 
 LogicFunction<UserDefinedLogicFunctionType>
-netlist_ns::Netlist::addCover(NameBase::name_type_cref coverOutputName,
+ns_netlist::Netlist::addCover(NameBase::name_type_cref coverOutputName,
                               TruthTableCRef truthTable) {
   so_covers_[coverOutputName] =
       LogicFunction<UserDefinedLogicFunctionType>{truthTable};

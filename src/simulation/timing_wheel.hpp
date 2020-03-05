@@ -12,13 +12,18 @@ using namespace logic_value_type_ns;
 struct event_t {
   event_t() = default;
 
-  ~event_t() = default;
+  event_t(const logic_value_t newValue, ns_simulation::simulation_time_t time, NameBase::name_type gateName)
+  : m_newValue(newValue)
+  , m_time(time)
+  , m_gateName(gateName) {}
 
   event_t(const event_t &) = default;
   event_t &operator=(const event_t &other) = default;
 
   event_t(event_t &&) = default;
   event_t &operator=(event_t &&other) = default;
+
+  ~event_t() = default;
 
   logic_value_t m_newValue;
   ns_simulation::simulation_time_t m_time;

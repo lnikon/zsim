@@ -10,7 +10,7 @@
 #include <unordered_map>
 #include <unordered_set>
 
-namespace netlist_ns {
+namespace ns_netlist {
 
 using namespace logic_function_ns;
 
@@ -57,4 +57,4 @@ private:
       so_covers_;
 };
 
-} // namespace netlist_ns
+} // namespace ns_netlist

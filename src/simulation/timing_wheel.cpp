@@ -61,5 +61,3 @@ void ns_simulation::TimingWheel::extendCapacity(
     m_events.reserve(capacity + 1);
   }
 }
-
-#include "timing_wheel.hpp"

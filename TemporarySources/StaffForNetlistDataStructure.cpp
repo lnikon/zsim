@@ -8,7 +8,7 @@
 #include <string>
 #include <functional>
 
-namespace netlist_ns
+namespace ns_netlist
 {
 
 
@@ -379,4 +379,4 @@ struct GenericNode : NodeBase, SimulateBase
 
 //using NetSPtr = std::shared_ptr<Net>;
 
-} // namespace netlist_ns
+} // namespace ns_netlist
