@@ -61,3 +61,5 @@ void ns_simulation::TimingWheel::extendCapacity(
     m_events.reserve(capacity + 1);
   }
 }
+
+auto ns_simulation::event_t::gate() const noexcept { return m_gate; }

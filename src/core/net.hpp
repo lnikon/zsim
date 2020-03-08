@@ -74,7 +74,7 @@ struct Net final : NodeBase, SendBase, ReceiveBase {
   NetTypeBitmap getTypeBitmap() const;
 
   void addGate(gate_ns::GateSPtr gate);
-  bool isPrimary() const;
+  gate_ns::GateSPtrVec gates() const noexcept;
 
 private:
   gate_ns::GateSPtrVec gates_;

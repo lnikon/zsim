@@ -3,25 +3,43 @@
 #include "netlist.hpp"
 #include "timing_wheel.hpp"
 
-namespace ns_simulation 
-{
+namespace ns_simulation {
 
-class SimulationEngine
-{
-    public:
-    SimulationEngine() = default;
+// struct PrimaryInputs {
+//  explicit PrimaryInputs(ns_netlist::Netlist);
 
-    SimulationEngine(const SimulationEngine&) = default;
-    SimulationEngine& operator=(const SimulationEngine&) = default;
+//  PrimaryInputs(const PrimaryInputs &) = default;
+//  PrimaryInputs &operator=(const PrimaryInputs &) = default;
 
-    SimulationEngine(SimulationEngine&&) = default;
-    SimulationEngine& operator=(SimulationEngine&&) = default;
+//  PrimaryInputs(PrimaryInputs &&) = default;
+//  PrimaryInputs &operator=(PrimaryInputs &&) = default;
 
-    ~SimulationEngine() = default;
+//  ~PrimaryInputs() = default;
 
-    private:
-    ns_netlist::Netlist m_netlist;
-    ns_simulation::TimingWheel m_timingWheel;
+// private:
+//  std::unordered_map<std::string, logic_value_t> m_values;
+//};
+
+using PrimaryInputs = std::unordered_map<std::string, logic_value_t>;
+using PrimaryOutputs = std::unordered_map<std::string, logic_value_t>;
+
+class SimulationEngine {
+public:
+  explicit SimulationEngine(ns_netlist::Netlist);
+
+  SimulationEngine(const SimulationEngine &) = default;
+  SimulationEngine &operator=(const SimulationEngine &) = default;
+
+  SimulationEngine(SimulationEngine &&) = default;
+  SimulationEngine &operator=(SimulationEngine &&) = default;
+
+  ~SimulationEngine() = default;
+
+  void simulate(PrimaryInputs primaryInputs);
+
+private:
+  ns_netlist::Netlist m_netlist;
+  ns_simulation::TimingWheel m_timingWheel;
 };
 
-}
+} // namespace ns_simulation

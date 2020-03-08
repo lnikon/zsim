@@ -1,6 +1,7 @@
 #pragma once
 
 #include "base_defs.hpp"
+#include "gate.hpp"
 #include "logic_value_defs.hpp"
 #include "simulation_defs.hpp"
 
@@ -12,10 +13,12 @@ using namespace logic_value_type_ns;
 struct event_t {
   event_t() = default;
 
-  event_t(const logic_value_t newValue, ns_simulation::simulation_time_t time, NameBase::name_type gateName)
-  : m_newValue(newValue)
-  , m_time(time)
-  , m_gateName(gateName) {}
+  event_t(const logic_value_t newValue, ns_simulation::simulation_time_t time,
+          gate_ns::GateSPtr gate)
+      : m_newValue(newValue), m_time(time), m_gate(gate) {}
+
+  event_t(ns_simulation::simulation_time_t time, gate_ns::GateSPtr gate)
+      : m_time(time), m_gate(gate) {}
 
   event_t(const event_t &) = default;
   event_t &operator=(const event_t &other) = default;
@@ -25,9 +28,11 @@ struct event_t {
 
   ~event_t() = default;
 
+  auto gate() const noexcept;
+
   logic_value_t m_newValue;
   ns_simulation::simulation_time_t m_time;
-  NameBase::name_type m_gateName;
+  gate_ns::GateSPtr m_gate;
 };
 
 using event_unique_ptr_t = std::unique_ptr<event_t>;

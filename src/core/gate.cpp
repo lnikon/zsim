@@ -90,3 +90,9 @@ void gate_ns::GateNode::attachNet(net_ns::NetSPtr net, net_ns::NetType type) {
   net->setType(type);
   nets_.push_back(net);
 }
+
+bool gate_ns::GateNode::operator==(const gate_ns::GateNode &rhs) const
+    noexcept {
+  return static_cast<const NodeBase &>(*this) ==
+         static_cast<const NodeBase &>(rhs);
+}

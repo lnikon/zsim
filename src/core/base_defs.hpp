@@ -26,7 +26,7 @@ struct IDBase {
   void setId(id_type id);
   auto getId() const -> id_type;
 
-  bool operator==(const IDBase &other);
+  inline bool operator==(const IDBase &other) const noexcept;
 
 protected:
   id_type id_{};
@@ -52,7 +52,7 @@ struct NameBase {
 
   auto getName() const -> name_type { return name_; }
 
-  bool operator==(const NameBase &other) { return name_ == other.getName(); }
+  inline bool operator==(const NameBase &other) const noexcept;
 
 protected:
   name_type name_{};
@@ -61,7 +61,7 @@ protected:
 struct DelayBase {
   using delay_type = std::size_t;
 
-  static const delay_type default_value = 0;
+  static const delay_type default_value = 1;
 
   explicit DelayBase(delay_type delay) : delay_{delay} {}
 
@@ -78,7 +78,7 @@ struct DelayBase {
 
   auto getDelay() const -> delay_type { return delay_; }
 
-  bool operator==(const DelayBase &other) { return delay_ == other.getDelay(); }
+  inline bool operator==(const DelayBase &other) const noexcept;
 
 protected:
   delay_type delay_{DelayBase::default_value};
@@ -163,43 +163,13 @@ struct NodeBase : IDBase, NameBase, DelayBase {
   virtual ~NodeBase() = default;
 
   NodeBase(const NodeBase &) = default;
-  NodeBase &operator=(const NodeBase &other) {
-    if (&other == this) {
-      return *this;
-    }
-
-    setId(other.getId());
-    setName(other.getName());
-    setDelay(other.getDelay());
-
-    return *this;
-  }
+  NodeBase &operator=(const NodeBase &other);
 
   NodeBase(NodeBase &&) = default;
-  NodeBase &operator=(NodeBase &&other) {
-    if (&other == this) {
-      return *this;
-    }
+  NodeBase &operator=(NodeBase &&other);
 
-    setId(other.getId());
-    setName(other.getName());
-    setDelay(other.getDelay());
-
-    other.setId(0);
-    other.setName("");
-    other.setDelay(0);
-
-    return *this;
-  }
-
-  bool operator==(const NodeBase &other) {
-    //        return (static_cast<IDBase>(*this) == static_cast<IDBase>(other))
-    //                && (static_cast<NameBase>(*this) ==
-    //                static_cast<NameBase>(other));
-    return (static_cast<NameBase>(*this) == static_cast<NameBase>(other));
-  }
-
-  bool operator!=(const NodeBase &other) { return !(*this == other); }
+  inline bool operator==(const NodeBase &other) const noexcept;
+  inline bool operator!=(const NodeBase &other) const noexcept;
 };
 
 namespace std {

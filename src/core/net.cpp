@@ -45,7 +45,7 @@ bool net_ns::Net::getType(net_ns::NetType type) const {
 
 void net_ns::Net::addGate(gate_ns::GateSPtr gate) { gates_.emplace(gate); }
 
-bool net_ns::Net::isPrimary() const {}
+gate_ns::GateSPtrVec net_ns::Net::gates() const noexcept { return gates_; }
 
 void net_ns::Net::reset() { bitmap_.reset(); }
 
