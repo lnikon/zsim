@@ -2,6 +2,8 @@
 
 IDBase::IDBase() : id_{id_generator_ns::IdGenerator::generate()} {}
 
+IDBase::~IDBase() {}
+
 void IDBase::setId(IDBase::id_type id) { id_ = id; }
 
 IDBase::id_type IDBase::getId() const { return id_; }
@@ -14,9 +16,13 @@ bool NameBase::operator==(const NameBase &other) const noexcept {
   return name_ == other.getName();
 }
 
+DelayBase::~DelayBase() {}
+
 bool DelayBase::operator==(const DelayBase &other) const noexcept {
   return delay_ == other.getDelay();
 }
+
+NodeBase::~NodeBase() {}
 
 NodeBase &NodeBase::operator=(const NodeBase &other) {
   if (&other == this) {
@@ -53,3 +59,9 @@ bool NodeBase::operator==(const NodeBase &other) const noexcept {
 bool NodeBase::operator!=(const NodeBase &other) const noexcept {
   return !(*this == other);
 }
+
+RunnableBase::~RunnableBase() {}
+
+ReceiveBase::~ReceiveBase() {}
+
+SendBase::~SendBase() {}

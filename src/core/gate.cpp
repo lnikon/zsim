@@ -38,7 +38,7 @@ logic_value_type_ns::logic_value_t gate_ns::GateNode::run() {
   auto inputNets = net_ns::NetSPtrVec{};
   zsim_algorithm_ns::filter(std::begin(nets_), std::end(nets_),
                             std::back_inserter(inputNets), [](const auto &net) {
-                              return net.bitmap_.get(
+                              return net->bitmap_.get(
                                   net_ns::NetType::INPUT_NET);
                             });
 
@@ -66,7 +66,7 @@ gate_ns::GateNode::run(logic_value_type_ns::LogicValueVecCRef input) {
   zsim_algorithm_ns::filter(
       std::begin(nets_), std::end(nets_), std::back_inserter(outputNets),
       [](const auto &net) {
-        return net.bitmap_.get(net_ns::NetType::OUTPUT_NET);
+        return net->bitmap_.get(net_ns::NetType::OUTPUT_NET);
       });
 
   /*
@@ -89,6 +89,16 @@ gate_ns::GateNode::run(logic_value_type_ns::LogicValueVecCRef input) {
 void gate_ns::GateNode::attachNet(net_ns::NetSPtr net, net_ns::NetType type) {
   net->setType(type);
   nets_.push_back(net);
+}
+
+net_ns::NetSPtrVec gate_ns::GateNode::outputNets() const noexcept {
+  auto outputNets = net_ns::NetSPtrVec{};
+  zsim_algorithm_ns::filter(
+      std::begin(nets_), std::end(nets_), std::back_inserter(outputNets),
+      [](const auto &net) {
+        return net->bitmap_.get(net_ns::NetType::OUTPUT_NET);
+      });
+  return outputNets;
 }
 
 bool gate_ns::GateNode::operator==(const gate_ns::GateNode &rhs) const

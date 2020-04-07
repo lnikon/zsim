@@ -1,4 +1,5 @@
 #include "netlist.hpp"
+#include "convert.hpp"
 #include "filter.hpp"
 #include "gate_router.hpp"
 
@@ -76,16 +77,24 @@ void ns_netlist::Netlist::attachNet(NameBase::name_type_cref gateName,
 }
 
 net_ns::NetSPtrVec ns_netlist::Netlist::primaryInputs() const {
+  auto allNets = net_ns::NetSPtrVec{};
+  zsim_algorithm_ns::map_values(std::begin(nets_), std::end(nets_),
+                                std::back_inserter(allNets));
+
   auto inputNets = net_ns::NetSPtrVec{};
-  zsim_algorithm_ns::filter(std::begin(nets_), std::end(nets_),
+  zsim_algorithm_ns::filter(std::begin(allNets), std::end(allNets),
                             std::back_inserter(inputNets),
                             net_ns::IsPrimaryInputPerdicate{});
   return inputNets;
 }
 
 net_ns::NetSPtrVec ns_netlist::Netlist::primaryOutputs() const {
+  auto allNets = net_ns::NetSPtrVec{};
+  zsim_algorithm_ns::map_values(std::begin(nets_), std::end(nets_),
+                                std::back_inserter(allNets));
+
   auto outputNets = net_ns::NetSPtrVec{};
-  zsim_algorithm_ns::filter(std::begin(nets_), std::end(nets_),
+  zsim_algorithm_ns::filter(std::begin(allNets), std::end(allNets),
                             std::back_inserter(outputNets),
                             net_ns::IsPrimaryOutputPerdicate{});
   return outputNets;

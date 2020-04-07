@@ -1,4 +1,5 @@
-#include "simulation_engine.hpp"
+﻿#include "simulation_engine.hpp"
+#include "gate.hpp"
 
 ns_simulation::SimulationEngine::SimulationEngine(ns_netlist::Netlist netlist)
     : m_netlist{netlist}, m_timingWheel{} {}
@@ -47,4 +48,30 @@ void ns_simulation::SimulationEngine::simulate(
   timingWheel.submit(initialEvents);
 
   // 4. Start actual simulation
+  simulation_time_t currentTime = startTime;
+  for (; currentTime < timingWheel.length(); ++currentTime) {
+    auto currentEvents = timingWheel.at(currentTime);
+    auto futureEvents = event_shared_ptr_vec_t{};
+    for (auto event : currentEvents) {
+      auto simulatedGate = event->gate();
+      auto oldValue = simulatedGate->getValue();
+      auto newValue = simulatedGate->run();
+      if (oldValue != newValue) {
+        std::cout << "time: " << currentTime
+                  << "; gate: " << simulatedGate->getName()
+                  << "; old value: " << static_cast<int>(oldValue)
+                  << "; new value: " << static_cast<int>(newValue) << ";\n";
+
+        auto netsAttachedToCurrentGate = simulatedGate->outputNets();
+        for (auto net : netsAttachedToCurrentGate) {
+          auto gates = net->gates();
+          for (auto gate : gates) {
+            futureEvents.emplace_back(std::make_shared<event_t>(
+                currentTime + simulatedGate->getDelay(), gate));
+          }
+        }
+      }
+      timingWheel.submit(futureEvents);
+    }
+  }
 }

@@ -3,12 +3,15 @@
 #include "blifparse.hpp"
 #include "netlist.hpp"
 #include "simulation_defs.hpp"
+#include "simulation_engine.hpp"
 #include "timing_wheel.hpp"
 
 #include <cassert>
 #include <cstdio>
 #include <cstdlib>
+#include <fstream>
 #include <iostream>
+#include <sstream>
 
 using namespace blifparse;
 
@@ -85,8 +88,9 @@ public:
      * Attach input nets
      */
     for (auto inputNetIdx = 0u; inputNetIdx < outputNet; ++inputNetIdx) {
-      gate->attachNet(netlist_.findNet(nets[inputNetIdx]),
-                      net_ns::NetType::INPUT_NET);
+      auto net = netlist_.findNet(nets[inputNetIdx]);
+      gate->attachNet(net, net_ns::NetType::INPUT_NET);
+      net->addGate(gate);
     }
 
     /*
@@ -123,30 +127,35 @@ private:
 };
 
 int main(int argc, char **argv) {
-  if (argc != 2) {
-    fprintf(stderr, "Usage: %s filename.blif\n", argv[0]);
-    fprintf(stderr, "\n");
-    fprintf(stderr, "Reads in an blif file into internal data structures\n");
-    fprintf(stderr, "and then prints it out\n");
+  if (argc != 3) {
+    fprintf(stderr, "Usage: %s filename.blif primary_input_values.vl\n",
+            argv[0]);
     exit(1);
   }
 
   NetlistTestCallback callback;
   blif_parse_filename(argv[1], callback);
 
-  auto gate1 = callback.netlist_.findGate("o_1_");
-  auto gate2 = callback.netlist_.findGate("o_2_");
+  auto netlist = callback.netlist_;
+  std::fstream inputValues(argv[2], inputValues.in);
+  if (!inputValues.is_open()) {
+    std::cout << "Failed to open primary inputs file: " << argv[2] << "\n";
+    return 1;
+  }
 
-  auto input1 = callback.netlist_.findNet("i_0_");
-  auto input2 = callback.netlist_.findNet("i_1_");
-  auto input3 = callback.netlist_.findNet("i_2_");
+  std::string line;
+  ns_simulation::PrimaryInputs inputs;
+  while (std::getline(inputValues, line)) {
+    std::istringstream iss(line);
+    std::string name;
+    int value;
+    iss >> name;
+    iss >> value;
+    inputs[name] = static_cast<ns_simulation::logic_value_t>(value);
+  }
 
-  input1->receive(logic_value_type_ns::logic_value_t::TRUE);
-  input2->receive(logic_value_type_ns::logic_value_t::DONT_CARE);
-  input3->receive(logic_value_type_ns::logic_value_t::FALSE);
-
-  auto value1 = gate1->run();
-  auto value2 = gate2->run();
+  ns_simulation::SimulationEngine engine(netlist);
+  engine.simulate(inputs);
 
   //    if(callback.had_error()) {
   //        return 1;

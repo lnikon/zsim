@@ -28,7 +28,7 @@ struct event_t {
 
   ~event_t() = default;
 
-  auto gate() const noexcept;
+  gate_ns::GateSPtr gate() const noexcept;
 
   logic_value_t m_newValue;
   ns_simulation::simulation_time_t m_time;
@@ -44,7 +44,7 @@ struct TimingWheel {
   using events_list_t = std::vector<event_shared_ptr_vec_t>;
   using size_type_t = events_list_t::size_type;
 
-  TimingWheel() = default;
+  TimingWheel();
 
   ~TimingWheel() = default;
 
@@ -61,6 +61,7 @@ struct TimingWheel {
   void submit(event_shared_ptr_vec_t &&events) noexcept;
   event_shared_ptr_vec_t at(ns_simulation::simulation_time_t time) const
       noexcept;
+  simulation_time_t length() const noexcept;
 
 private:
   events_list_t m_events;

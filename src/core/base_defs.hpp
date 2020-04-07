@@ -15,7 +15,7 @@ struct IDBase {
 
   IDBase();
 
-  virtual ~IDBase() = default;
+  virtual ~IDBase();
 
   IDBase(const IDBase &) = default;
   IDBase &operator=(const IDBase &) = delete;
@@ -65,8 +65,8 @@ struct DelayBase {
 
   explicit DelayBase(delay_type delay) : delay_{delay} {}
 
-  DelayBase() {}
-  virtual ~DelayBase() = default;
+  DelayBase() = default;
+  virtual ~DelayBase();
 
   DelayBase(const DelayBase &) = default;
   DelayBase &operator=(const DelayBase &) = default;
@@ -98,7 +98,7 @@ protected:
 struct RunnableBase {
   RunnableBase() = default;
 
-  virtual ~RunnableBase() {}
+  virtual ~RunnableBase();
   virtual logic_value_t run() = 0;
   virtual logic_value_t run(LogicValueVecCRef input) = 0;
 };
@@ -107,7 +107,7 @@ struct RunnableBase {
 struct ReceiveBase {
   ReceiveBase() = default;
 
-  virtual ~ReceiveBase() {}
+  virtual ~ReceiveBase();
 
   virtual void receive(logic_value_t value) { value_ = value; }
 
@@ -126,7 +126,7 @@ using ReceiveBaseSPtrVec = std::vector<ReceiveBaseSPtr>;
 
 // One to many relationship
 struct SendBase {
-  virtual ~SendBase() {}
+  virtual ~SendBase();
 
   virtual void send(logic_value_t value) {
     std::for_each(std::begin(to_), std::end(to_),
@@ -160,7 +160,7 @@ struct NodeBase : IDBase, NameBase, DelayBase {
 
   NodeBase(name_type_cref name) : IDBase(), NameBase(name) {}
 
-  virtual ~NodeBase() = default;
+  virtual ~NodeBase();
 
   NodeBase(const NodeBase &) = default;
   NodeBase &operator=(const NodeBase &other);
@@ -168,8 +168,8 @@ struct NodeBase : IDBase, NameBase, DelayBase {
   NodeBase(NodeBase &&) = default;
   NodeBase &operator=(NodeBase &&other);
 
-  inline bool operator==(const NodeBase &other) const noexcept;
-  inline bool operator!=(const NodeBase &other) const noexcept;
+  bool operator==(const NodeBase &other) const noexcept;
+  bool operator!=(const NodeBase &other) const noexcept;
 };
 
 namespace std {

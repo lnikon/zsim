@@ -76,7 +76,7 @@ struct Net final : NodeBase, SendBase, ReceiveBase {
   void addGate(gate_ns::GateSPtr gate);
   gate_ns::GateSPtrVec gates() const noexcept;
 
-private:
+  // private:
   gate_ns::GateSPtrVec gates_;
   NetType type_{NetType::UNDEFINED};
   NetTypeBitmap bitmap_{};

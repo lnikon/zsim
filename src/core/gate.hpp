@@ -45,6 +45,8 @@ struct GateNode final : NodeBase, SimulateBase {
 
   void attachNet(net_ns::NetSPtr net, net_ns::NetType type);
 
+  net_ns::NetSPtrVec outputNets() const noexcept;
+
   inline bool operator==(const GateNode &rhs) const noexcept;
 
 private:
