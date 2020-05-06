@@ -1,11 +1,17 @@
 ﻿#include "simulation_engine.hpp"
 #include "gate.hpp"
+#include "logic_value_defs.hpp"
+
+#include <unordered_map>
+#include <utility>
+#include <vector>
 
 ns_simulation::SimulationEngine::SimulationEngine(ns_netlist::Netlist netlist)
     : m_netlist{netlist}, m_timingWheel{} {}
 
 void ns_simulation::SimulationEngine::simulate(
     ns_simulation::PrimaryInputs primaryInputValues) {
+
   // 1. Initialize primary inputs - O(n*logn)
   for (const auto &[name, value] : primaryInputValues) {
     auto net = m_netlist.findNet(name);
@@ -14,10 +20,7 @@ void ns_simulation::SimulationEngine::simulate(
     }
   }
 
-  // 2. Get primary inputs
-  auto primaryInputs = m_netlist.primaryInputs();
-
-  // 3. Fill event list with gates attached to primary inputs.
+  // 2. Fill event list with gates attached to primary inputs.
   // No two events with same gate can coexists, so we need this
   // lambda to perform that check
   auto containsEventWithGateEqualTo = [](auto events, auto gate) {
@@ -32,6 +35,7 @@ void ns_simulation::SimulationEngine::simulate(
   // for each gate, if event with that gate doesn't already exists,
   // then create new event from that gate and current simulation time,
   // push created event into initial events list
+  auto primaryInputs = m_netlist.primaryInputs();
   constexpr const simulation_time_t startTime = 0;
   event_shared_ptr_vec_t initialEvents;
   for (auto net : primaryInputs) {
@@ -47,7 +51,11 @@ void ns_simulation::SimulationEngine::simulate(
   TimingWheel timingWheel;
   timingWheel.submit(initialEvents);
 
-  // 4. Start actual simulation
+  // Dump signal value changes here
+  //  SignalsValues m_sv;
+  // ----------
+
+  // 3. Start actual simulation
   simulation_time_t currentTime = startTime;
   for (; currentTime < timingWheel.length(); ++currentTime) {
     auto currentEvents = timingWheel.at(currentTime);
@@ -56,12 +64,14 @@ void ns_simulation::SimulationEngine::simulate(
       auto simulatedGate = event->gate();
       auto oldValue = simulatedGate->getValue();
       auto newValue = simulatedGate->run();
-      if (oldValue != newValue) {
-        std::cout << "time: " << currentTime
-                  << "; gate: " << simulatedGate->getName()
-                  << "; old value: " << static_cast<int>(oldValue)
-                  << "; new value: " << static_cast<int>(newValue) << ";\n";
 
+      // dump signal value
+      m_sv[simulatedGate->getName()].push_back(std::make_pair(
+          static_cast<ns_simulation::simulation_time_t>(currentTime),
+          newValue));
+      // -----------------
+
+      if (oldValue != newValue) {
         auto netsAttachedToCurrentGate = simulatedGate->outputNets();
         for (auto net : netsAttachedToCurrentGate) {
           auto gates = net->gates();
@@ -74,4 +84,8 @@ void ns_simulation::SimulationEngine::simulate(
       timingWheel.submit(futureEvents);
     }
   }
+}
+
+SignalsValues ns_simulation::SimulationEngine::getSimulationResults() const {
+  return m_sv;
 }

@@ -3,6 +3,10 @@
 #include "netlist.hpp"
 #include "timing_wheel.hpp"
 
+using SignalValue = std::pair<ns_simulation::simulation_time_t, logic_value_t>;
+using SignalValues = std::vector<SignalValue>;
+using SignalsValues = std::unordered_map<std::string, SignalValues>;
+
 namespace ns_simulation {
 
 // struct PrimaryInputs {
@@ -36,10 +40,12 @@ public:
   ~SimulationEngine() = default;
 
   void simulate(PrimaryInputs primaryInputs);
+  SignalsValues getSimulationResults() const;
 
 private:
   ns_netlist::Netlist m_netlist;
   ns_simulation::TimingWheel m_timingWheel;
+  SignalsValues m_sv;
 };
 
 } // namespace ns_simulation

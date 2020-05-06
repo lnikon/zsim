@@ -44,6 +44,22 @@ static std::string stringify(logic_value_t value) {
   return result;
 }
 
+static int intify(logic_value_t value) {
+  auto result = 3;
+  if (value == logic_value_t::TRUE) {
+    result = 1;
+  } else if (value == logic_value_t::FALSE) {
+    result = 0;
+  } else if (value == logic_value_t::HIGH_IMP) {
+    result = 4;
+  } else if (value == logic_value_t::DONT_CARE) {
+    result = 3;
+  } else if (value == logic_value_t::UNKOWN) {
+    result = 3;
+  }
+  return result;
+}
+
 static void print(logic_value_t value) {
   std::cout << stringify(value) << std::endl;
 }

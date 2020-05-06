@@ -4,81 +4,66 @@
 
 #include <memory>
 
-namespace table_ns
-{
+namespace table_ns {
 
 using namespace logic_value_type_ns;
 
-template <class ValueType>
-struct Table
-{
-    using dim_size_type = typename ValueVec<ValueType>::size_type;
-    using size_type     = std::pair<dim_size_type, dim_size_type>;
+template <class ValueType> struct Table {
+  using dim_size_type = typename ValueVec<ValueType>::size_type;
+  using size_type = std::pair<dim_size_type, dim_size_type>;
 
-    Table() = default;
+  Table() = default;
 
-    constexpr explicit Table(ValueMatCRef<ValueType> table)
-        : table_{table} {}
+  constexpr explicit Table(ValueMatCRef<ValueType> table) : table_{table} {}
 
-    constexpr auto row(dim_size_type row) const -> ValueVecCRef<ValueType>
-    {
-        return table_[row];
+  constexpr auto row(dim_size_type row) const -> ValueVecCRef<ValueType> {
+    return table_[row];
+  }
+
+  constexpr ValueVec<ValueType> column(dim_size_type col) const {
+    const auto &tableSize = size();
+    ValueVec<ValueType> resultColumn(tableSize.second);
+
+    for (dim_size_type rowIdx = 0; rowIdx < tableSize.first; ++rowIdx) {
+      resultColumn.emplace_back(table_[rowIdx][col]);
     }
 
-    constexpr auto column(dim_size_type col) const
-    {
-        const auto& tableSize = size();
-        ValueVec<ValueType> resultColumn(tableSize.second);
+    return resultColumn;
+  }
 
-        for (dim_size_type rowIdx = 0; rowIdx < tableSize.first; ++rowIdx)
-        {
-            resultColumn.emplace_back(table_[rowIdx][col]);
-        }
+  template <class T> constexpr void addRow(T &&inputRow) {
+    table_.emplace_back(std::forward<T>(inputRow));
 
-        return resultColumn;
-    }
+    ++rows_;
+    columns_ += inputRow.size();
+  }
 
-    template <class T>
-    constexpr void addRow(T&& inputRow)
-    {
-        table_.emplace_back(std::forward<T>(inputRow));
+  constexpr auto size() const noexcept {
+    return std::make_pair(rows_, columns_);
+  }
 
-        ++rows_;
-        columns_ += inputRow.size();
-    }
+  ~Table() = default;
 
-    constexpr auto size() const noexcept
-    {
-        return std::make_pair(rows_, columns_);
-    }
+  constexpr Table(const Table &) = default;
+  constexpr Table &operator=(const Table &) = default;
 
-    ~Table() = default;
+  constexpr Table(Table &&) = default;
+  constexpr Table &operator=(Table &&) = default;
 
-    constexpr Table(const Table&) = default;
-    constexpr Table& operator=(const Table&) = default;
+private:
+  ValueMat<ValueType> table_{};
 
-    constexpr Table(Table&&) = default;
-    constexpr Table& operator=(Table&&) = default;
-
-    private:
-    ValueMat<ValueType> table_{};
-
-    // Keep track of each dimension size during row/column addition
-    dim_size_type rows_{};
-    dim_size_type columns_{};
-
+  // Keep track of each dimension size during row/column addition
+  dim_size_type rows_{};
+  dim_size_type columns_{};
 };
 
-template <class ValueType, class... Args>
-auto make_unique(Args&&... args)
-{
-    return std::make_unique<Table<ValueType>>(std::forward<Args>(args)...);
+template <class ValueType, class... Args> auto make_unique(Args &&... args) {
+  return std::make_unique<Table<ValueType>>(std::forward<Args>(args)...);
 }
 
-template <class ValueType, class... Args>
-auto make_shared(Args&&... args)
-{
-    return std::make_shared<Table<ValueType>>(std::forward<Args>(args)...);
+template <class ValueType, class... Args> auto make_shared(Args &&... args) {
+  return std::make_shared<Table<ValueType>>(std::forward<Args>(args)...);
 }
 
 } // namespace table_ns

@@ -156,6 +156,25 @@ int main(int argc, char **argv) {
 
   ns_simulation::SimulationEngine engine(netlist);
   engine.simulate(inputs);
+  auto sv = engine.getSimulationResults();
+
+  const std::string resultStreamName("result.sv");
+  std::fstream resultStream;
+  resultStream.open(resultStreamName, std::fstream::out | std::fstream::trunc);
+  if (!resultStream.is_open()) {
+    std::cerr << "Unable open stream: " << resultStreamName
+              << " to write simulation results.\nExiting...\n";
+    return 1;
+  }
+
+  for (const auto &[name, vec] : sv) {
+    resultStream << "\n";
+    resultStream << name << " ";
+    for (auto &[time, value] : vec) {
+      resultStream << time << " " << intify(value) << " ";
+    }
+    resultStream << "\n";
+  }
 
   //    if(callback.had_error()) {
   //        return 1;

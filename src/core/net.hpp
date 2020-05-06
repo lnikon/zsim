@@ -78,7 +78,7 @@ struct Net final : NodeBase, SendBase, ReceiveBase {
 
   // private:
   gate_ns::GateSPtrVec gates_;
-  NetType type_{NetType::UNDEFINED};
+  NetType type_{NetType::UNDEFINED}; // This field is unused
   NetTypeBitmap bitmap_{};
 
   void reset();
