@@ -108,31 +108,32 @@ LineSeriesVec MainWindow::converterSimulationResultsMapIntoLineSeries(
     QLineSeries *pSeries = new QLineSeries;
 
     SignalValues values = *it;
-    if (values[0].second) {
+    if (values[0].first) {
       pSeries->append(current_width, current_height + height_offset);
 
       current_width += width_offset;
       pSeries->append(current_width, current_height + height_offset);
-    } else if (!values[0].second) {
+    } else {
       pSeries->append(current_width, current_height);
 
       current_width += width_offset;
-      pSeries->append(current_width + width_offset, current_height);
+      pSeries->append(current_width, current_height);
     }
 
     for (int i = 1; i + 1 < values.size(); ++i) {
-      if (values[i].second) {
-        if (!values[i - 1].second) {
+      if (values[i].first) {
+        if (!values[i - 1].first) {
           pSeries->append(current_width, current_height);
           pSeries->append(current_width, current_height + height_offset);
         }
 
         current_width += width_offset;
         pSeries->append(current_width, current_height + height_offset);
-      } else if (!values[i].second) {
-        if (values[i - 1].second) {
+      } else {
+        if (values[i - 1].first) {
           pSeries->append(current_width, current_height);
-          pSeries->append(current_width, current_height + height_offset);
+          //          pSeries->append(current_width, current_height +
+          //          height_offset);
         }
 
         current_width += width_offset;
@@ -141,6 +142,7 @@ LineSeriesVec MainWindow::converterSimulationResultsMapIntoLineSeries(
     }
 
     result.push_back(QPair<QString, QLineSeries *>(name, pSeries));
+    current_height += 1;
   }
 
   return result;
