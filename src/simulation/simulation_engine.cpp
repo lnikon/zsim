@@ -64,13 +64,6 @@ void ns_simulation::SimulationEngine::simulate(
       auto simulatedGate = event->gate();
       auto oldValue = simulatedGate->getValue();
       auto newValue = simulatedGate->run();
-
-      // dump signal value
-      m_sv[simulatedGate->getName()].push_back(std::make_pair(
-          static_cast<ns_simulation::simulation_time_t>(currentTime),
-          newValue));
-      // -----------------
-
       if (oldValue != newValue) {
         auto netsAttachedToCurrentGate = simulatedGate->outputNets();
         for (auto net : netsAttachedToCurrentGate) {
